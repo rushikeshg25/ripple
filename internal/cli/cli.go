@@ -18,6 +18,7 @@ const usage = `Ripple — reliable file transfer over UDP
 Usage:
   ripple send -to HOST:PORT -file PATH
   ripple receive -listen 127.0.0.1:9000 -out PATH
+  ripple relay -listen 127.0.0.1:9001 -to 127.0.0.1:9000 -loss 0.05
 
 Run a command with -h for its options. Receivers accept one transfer and exit.
 `
@@ -28,6 +29,8 @@ func Run(ctx context.Context, args []string, out, errout io.Writer) error {
 		return err
 	}
 	switch args[0] {
+	case "relay":
+		return runRelay(ctx, args[1:], out, errout)
 	case "send", "receive":
 		return transfer(ctx, args[0], args[1:], out, errout)
 	default:
