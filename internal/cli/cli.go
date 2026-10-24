@@ -42,6 +42,9 @@ func transfer(ctx context.Context, mode string, args []string, out, errout io.Wr
 	fs := flag.NewFlagSet(mode, flag.ContinueOnError)
 	fs.SetOutput(errout)
 	var address, path string
+	events := fs.String("events", "", "write packet events to a new JSONL file")
+	asJSON := fs.Bool("json", false, "write the final summary as JSON")
+	quiet := fs.Bool("quiet", false, "suppress progress lines")
 	if mode == "send" {
 		fs.StringVar(&address, "to", "", "receiver or relay HOST:PORT")
 		fs.StringVar(&path, "file", "", "regular source file")
@@ -73,6 +76,14 @@ func transfer(ctx context.Context, mode string, args []string, out, errout io.Wr
 	if err = ctx.Err(); err != nil {
 		return err
 	}
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+	report, reportErr := newReporter(*events, errout, *quiet, cancel)
+	if reportErr != nil {
+		return reportErr
+	}
+	defer func() { err = errors.Join(err, report.err, report.close()) }()
+	cfg.Observe = report.observe
 	network := "udp6"
 	if addr.IP.To4() != nil || addr.IP == nil {
 		network = "udp4"
@@ -110,8 +121,10 @@ func transfer(ctx context.Context, mode string, args []string, out, errout io.Wr
 	if err != nil {
 		return err
 	}
-	_, err = fmt.Fprintf(out, "%s complete: %d bytes, sha256=%s, retries=%d\n", mode, stats.Bytes, stats.SHA256, stats.Retransmissions)
-	return err
+	if report.err != nil {
+		return report.err
+	}
+	return summary(out, mode, stats, *asJSON)
 }
 func resolve(address string, remote bool) (*net.UDPAddr, error) {
 	addr, err := net.ResolveUDPAddr("udp", address)
