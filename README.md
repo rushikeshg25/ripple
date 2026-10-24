@@ -14,24 +14,14 @@ The binary has **zero third-party Go dependencies**.
 ## Architecture
 
 ```mermaid
-flowchart LR
-    subgraph S[Sender]
-        SRC[Source file] --> HASH[SHA-256 preflight]
-        HASH --> SEND[Sliding send window]
-        TIMER[RTT and retry timer] --> SEND
-        CC[Congestion control] --> SEND
-    end
-    SEND -->|Data over UDP| NET[Optional fault relay]
-    NET -->|Loss, delay, jitter, duplicates| RECV
-    subgraph R[Receiver]
-        RECV[Reorder window] --> FILE[Ordered temporary file]
-        FILE --> CHECK[Verify size and SHA-256]
-        CHECK --> PUBLISH[Publish without overwrite]
-    end
-    RECV -->|Cumulative and selective ACKs| NET
-    NET -->|ACKs and completion| SEND
-    PUBLISH -->|FinishAck after publication| NET
-    SEND --> EVENTS[Progress and JSONL events]
+flowchart TB
+    SRC[Source file and SHA-256] --> TX["Sender<br/>Sliding window, RTT, retransmissions<br/>Congestion control"]
+    TX -->|Data| NET["Optional UDP fault relay<br/>Loss, delay, jitter, duplication, corruption"]
+    NET -->|Data| RX["Receiver<br/>Reorder buffer and ordered writes<br/>Size and SHA-256 verification"]
+    RX -->|Cumulative and selective ACKs| NET
+    NET -->|ACKs| TX
+    RX -->|Verified file| DEST["Atomic publication<br/>No overwrite"]
+    DEST -.->|FinishAck through the same UDP path| TX
 ```
 
 Without the relay, the endpoints communicate directly. Each process handles one
@@ -144,4 +134,4 @@ make demo    # separate-process test through the fault relay
 
 Tests need no external services or elevated network privileges. The CI workflow
 runs checks and the process demo on Ubuntu and macOS. Read [the plan](docs/PLAN.md)
-for the 21-commit implementation sequence and explicit acceptance criteria.
+for the 22-commit delivery sequence and explicit acceptance criteria.

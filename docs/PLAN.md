@@ -15,7 +15,9 @@ phase. A receiver must not overwrite an existing file or publish partial content
 
 ## Intended commit sequence
 
-Each numbered item is a separately reviewable implementation increment.
+Each numbered item is a separately reviewable increment. The original plan used
+21 commits; a final browser check added one documentation commit to improve the
+README diagram at normal GitHub reading width.
 
 1. Scaffold the Go module, license, and delivery plan.
 2. Add the bounded binary wire codec and corruption checks.
@@ -38,6 +40,7 @@ Each numbered item is a separately reviewable implementation increment.
 19. Complete README diagrams, examples, and the implementation plan.
 20. Add local verification commands and CI checks.
 21. Record release verification, measured behavior, and remaining limits.
+22. Check the published README diagram and improve its normal-width readability.
 
 ## Verification strategy
 
@@ -166,7 +169,7 @@ Evidence: `internal/cli/*_test.go`, `source_test.go`, `boundaries_test.go`, and
 `scripts/demo.py`. The first 256 KiB demo completed with 29 relay drops and 18
 sender retransmissions. These counts describe one run, not a performance target.
 
-## Milestone E — Explain, automate, and publish (commits 18–21)
+## Milestone E — Explain, automate, and publish (commits 18–22)
 
 The final delivery includes the detailed [architecture](ARCHITECTURE.md), README
 architecture diagram, local Make targets, an Ubuntu/macOS CI workflow, and a
@@ -183,7 +186,7 @@ Acceptance criteria:
 - The repository contains source and docs, with no binaries, demo files, or local
   session logs committed.
 - GitHub visibility is public, the remote main commit matches local HEAD, and the
-  delivered history contains 21 commits. Remote CI status is reported separately
+  delivered history contains 22 commits. Remote CI status is reported separately
   from local verification.
 
 ## Future work: separate proposals, not unfinished v1 requirements

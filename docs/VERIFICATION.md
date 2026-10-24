@@ -2,7 +2,7 @@
 
 Recorded on **2026-10-24**, using Go **1.24.6**, macOS (`darwin/arm64`), and
 Python **3.14**. The implementation tested here is the source through commit
-`f6cd185`; the final documentation commit does not change executable code.
+`f6cd185`; the final documentation commits do not change executable code.
 
 ## Local checks
 
@@ -88,7 +88,9 @@ losses. The protocol did not need a behavioral change.
 
 The [Verify workflow](../.github/workflows/ci.yml) runs formatting, vet, race tests,
 and the process demonstration on Ubuntu and macOS. It also fuzzes the parser on
-Ubuntu. This record captures local checks before publication; inspect the
+Ubuntu. The initial published commit `3d7d332` passed both jobs in
+[run 40096641090](https://github.com/rushikeshg25/ripple/actions/runs/40096641090).
+The subsequent diagram change affects documentation only; inspect the
 [GitHub Actions runs](https://github.com/rushikeshg25/ripple/actions) for the status
 of a particular remote commit.
 
