@@ -1,8 +1,9 @@
 package transport
 
 import (
-	"github.com/rushikeshg25/ripple/internal/wire"
 	"time"
+
+	"github.com/rushikeshg25/ripple/internal/wire"
 )
 
 type flight struct {

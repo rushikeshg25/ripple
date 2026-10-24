@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"errors"
-	"github.com/rushikeshg25/ripple/internal/wire"
 	"io"
 	"testing"
+
+	"github.com/rushikeshg25/ripple/internal/wire"
 )
 
 func TestReassemblyReordersAndDeduplicates(t *testing.T) {

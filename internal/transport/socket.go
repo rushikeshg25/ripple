@@ -3,9 +3,10 @@ package transport
 import (
 	"context"
 	"errors"
-	"github.com/rushikeshg25/ripple/internal/wire"
 	"net"
 	"time"
+
+	"github.com/rushikeshg25/ripple/internal/wire"
 )
 
 const pollInterval = 10 * time.Millisecond

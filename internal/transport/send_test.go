@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"context"
 	"crypto/sha256"
-	"github.com/rushikeshg25/ripple/internal/wire"
 	"net"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/rushikeshg25/ripple/internal/wire"
 )
 
 func udpSocket(t *testing.T) *net.UDPConn {

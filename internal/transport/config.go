@@ -3,8 +3,9 @@ package transport
 
 import (
 	"fmt"
-	"github.com/rushikeshg25/ripple/internal/wire"
 	"time"
+
+	"github.com/rushikeshg25/ripple/internal/wire"
 )
 
 type Config struct {
